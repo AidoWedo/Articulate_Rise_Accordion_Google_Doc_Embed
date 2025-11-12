@@ -1,0 +1,166 @@
+<!-- PAGE CENTER WRAPPER -->
+<div class="accordion-container">
+
+  <!-- ===== Accordion: Video Transcript ===== -->
+  <div class="accordion" id="transcript-accordion-1">
+    <button
+      class="accordion__header"
+      id="acc-header-1"
+      aria-controls="acc-panel-1"
+      aria-expanded="false"
+    >
+      <span>Video Transcript</span>
+      <svg class="accordion__chevron" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+        <path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+      </svg>
+    </button>
+
+    <div
+      class="accordion__panel"
+      id="acc-panel-1"
+      role="region"
+      aria-labelledby="acc-header-1"
+      hidden
+    >
+      <div class="doc-embed">
+
+        <!-- ✅ EN Transcript iframe -->
+        <iframe
+          src="https://docs.google.com/document/d/<insert_Google_Doc_ID>/preview"
+          width="100%"
+          height="600px"
+          frameborder="0"
+          allowfullscreen
+          referrerpolicy="no-referrer-when-downgrade"
+        ></iframe>
+
+      </div>
+    </div>
+  </div>
+
+  <br />
+
+  <!-- ===== Accordion: Video Transcript (Japanese) ===== -->
+  <div class="accordion" id="transcript-accordion-2">
+    <button
+      class="accordion__header"
+      id="acc-header-2"
+      aria-controls="acc-panel-2"
+      aria-expanded="false"
+    >
+      <span>Video Transcript (Japanese)</span>
+      <svg class="accordion__chevron" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+        <path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+      </svg>
+    </button>
+
+    <div
+      class="accordion__panel"
+      id="acc-panel-2"
+      role="region"
+      aria-labelledby="acc-header-2"
+      hidden
+    >
+      <div class="doc-embed">
+
+        <!-- ✅ JP Transcript iframe -->
+        <iframe 
+          src="https://docs.google.com/document/d/<insert_Google_Doc_ID>/preview" 
+          width="100%" 
+          height="600px" 
+          frameborder="0">
+        </iframe>
+
+      </div>
+    </div>
+  </div>
+
+</div> <!-- END CENTER WRAPPER -->
+
+
+<style>
+  /* ✅ Centering wrapper */
+  .accordion-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  .accordion {
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  }
+
+  .accordion__header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .5rem;
+    padding: 1rem 1.25rem;
+    background: #f8fafc;
+    color: #0f172a;
+    border: 0;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+  .accordion__header:hover { background: #f1f5f9; }
+  .accordion__header:focus-visible {
+    outline: 3px solid #93c5fd;
+    outline-offset: 2px;
+  }
+
+  .accordion__header[aria-expanded="true"] .accordion__chevron {
+    transform: rotate(180deg);
+  }
+  .accordion__chevron {
+    transition: transform .2s ease;
+  }
+
+  .accordion__panel {
+    padding: 0;
+    background: #fff;
+  }
+
+  .doc-embed {
+    position: relative;
+    width: 100%;
+    height: 680px;
+    border-top: 1px solid #e5e7eb;
+  }
+  .doc-embed iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+</style>
+
+
+<script>
+  function initAccordion(headerId, panelId) {
+    const header = document.getElementById(headerId);
+    const panel = document.getElementById(panelId);
+
+    function toggle() {
+      const expanded = header.getAttribute("aria-expanded") === "true";
+      header.setAttribute("aria-expanded", String(!expanded));
+      panel.hidden = expanded;
+    }
+
+    header.addEventListener("click", toggle);
+    header.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        toggle();
+      }
+    });
+  }
+
+  initAccordion("acc-header-1", "acc-panel-1");
+  initAccordion("acc-header-2", "acc-panel-2");
+</script>
