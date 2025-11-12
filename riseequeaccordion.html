@@ -1,0 +1,239 @@
+<!-- ===== Rise-like, two-block accordion (Century Gothic) ===== -->
+<div class="rise-list">
+
+  <!-- Block 1: English -->
+  <section class="rise-item" data-acc>
+    <button class="rise-head" type="button" aria-expanded="false" aria-controls="panel-en" id="btn-en">
+      <span class="rise-title">Video Transcript</span>
+      <span class="rise-plus" aria-hidden="true"></span>
+    </button>
+    <div class="rise-panel" id="panel-en" role="region" aria-labelledby="btn-en" hidden>
+      <div class="rise-embed">
+        <iframe
+          title="Video Transcript (EN)"
+          src="https://docs.google.com/document/d/<insert doc id here>/preview"
+          width="100%" height="600" frameborder="0"
+          allowfullscreen referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- Block 2: Japanese -->
+  <section class="rise-item" data-acc>
+    <button class="rise-head" type="button" aria-expanded="false" aria-controls="panel-jp" id="btn-jp">
+      <span class="rise-title">Video Transcript (Japanese)</span>
+      <span class="rise-plus" aria-hidden="true"></span>
+    </button>
+    <div class="rise-panel" id="panel-jp" role="region" aria-labelledby="btn-jp" hidden>
+      <div class="rise-embed">
+        <iframe
+          title="Video Transcript (JP)"
+          src="https://docs.google.com/document/d/<insert doc id here>/preview"
+          width="100%" height="600" frameborder="0"></iframe>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<style>
+  :root{
+    --rise-border:#E5E7EB;
+    --rise-text:#0B1020;
+    --rise-muted:#6B7280;
+    --rise-bg:#fff;
+    --rise-pad:22px;    /* header padding */
+    --rise-radius:8px;  /* outer card radius */
+    --rise-speed:.24s;
+  }
+
+  /* container matches Rise’s centered, flat card look */
+  .rise-list{
+    max-width: 980px;
+    margin: 24px auto;
+    padding: 0 16px;
+    font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
+    color: var(--rise-text);
+    background: transparent;
+  }
+
+  /* outer card */
+  .rise-item{
+    background: var(--rise-bg);
+    border: 1px solid var(--rise-border);
+    border-radius: var(--rise-radius);
+    overflow: clip;
+    margin: 16px 0;
+  }
+
+  /* divide items internally like your screenshot */
+  .rise-item + .rise-item{ margin-top: 18px; }
+
+  /* header row: big tap target, left title + right plus */
+  .rise-head{
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 16px;
+    padding: var(--rise-pad);
+    background: var(--rise-bg);
+    border: 0;
+    cursor: pointer;
+    text-align: left;
+    font-size: 1.125rem;  /* ~18px */
+    font-weight: 700;     /* like Rise headings */
+    color: var(--rise-text);
+    transition: background var(--rise-speed) ease;
+  }
+  .rise-head:hover{ background: #FAFAFB; }
+  .rise-head:focus-visible{
+    outline: 3px solid #93C5FD;
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  .rise-title{ line-height: 1.35; }
+
+  /* plus/minus glyph at right */
+  .rise-plus{
+    position: relative;
+    width: 22px; height: 22px;
+    display: inline-block;
+  }
+  .rise-plus::before, .rise-plus::after{
+    content: "";
+    position: absolute;
+    background: #6B7280; /* neutral gray like Rise */
+    left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    transition: opacity var(--rise-speed) ease, transform var(--rise-speed) ease;
+  }
+  /* horizontal bar */
+  .rise-plus::before{
+    width: 14px; height: 2px; border-radius: 1px;
+  }
+  /* vertical bar (hidden when open) */
+  .rise-plus::after{
+    width: 2px; height: 14px; border-radius: 1px;
+  }
+  /* when expanded, hide vertical to become a minus */
+  .rise-head[aria-expanded="true"] .rise-plus::after{
+    opacity: 0;
+    transform: translate(-50%, -50%) scaleY(0);
+  }
+
+  /* panel: flat, with top divider, smooth open/close */
+  .rise-panel{
+    border-top: 1px solid var(--rise-border);
+    padding-inline: var(--rise-pad);
+    background: var(--rise-bg);
+    height: 0;
+    overflow: hidden;
+    padding-top: 0; padding-bottom: 0;
+    transition: height var(--rise-speed) ease, padding var(--rise-speed) ease;
+  }
+  .rise-panel.r-open{
+    padding-top: 18px;
+    padding-bottom: 22px;
+  }
+
+  /* iframe area */
+  .rise-embed{
+    position: relative;
+    width: 100%;
+    height: 680px;
+    border: 1px solid var(--rise-border);
+    border-radius: 6px;
+    overflow: hidden;
+    background: #fff;
+  }
+  .rise-embed iframe{
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    border: 0; display: block;
+  }
+
+  @media (max-width: 560px){
+    .rise-embed{ height: 520px; }
+    .rise-head{ padding: 18px; }
+    .rise-panel{ padding-inline: 18px; }
+  }
+</style>
+
+<script>
+  // single-open, smooth height animation (plus → minus)
+  (function(){
+    const sections = Array.from(document.querySelectorAll('.rise-item[data-acc]'));
+    let current = null;
+
+    sections.forEach(sec => {
+      const btn   = sec.querySelector('.rise-head');
+      const panel = sec.querySelector('.rise-panel');
+
+      // initial state
+      btn.setAttribute('aria-expanded', 'false');
+      panel.hidden = true;
+      panel.style.height = '0px';
+
+      btn.addEventListener('click', () => toggle(btn, panel));
+      btn.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(btn, panel); }
+      });
+    });
+
+    function toggle(btn, panel){
+      const isOpen = btn.getAttribute('aria-expanded') === 'true';
+
+      // close any other open panel
+      if (current && current !== panel){
+        collapse(current.previousElementSibling, current);
+        current = null;
+      }
+
+      if (isOpen){
+        collapse(btn, panel);
+      } else {
+        expand(btn, panel);
+        current = panel;
+      }
+    }
+
+    function expand(btn, panel){
+      btn.setAttribute('aria-expanded', 'true');
+      panel.hidden = false;
+      panel.classList.add('r-open');
+
+      // measure target height
+      panel.style.height = 'auto';
+      const target = panel.scrollHeight + 'px';
+      panel.style.height = '0px';
+      requestAnimationFrame(() => { panel.style.height = target; });
+
+      panel.addEventListener('transitionend', function onEnd(e){
+        if (e.propertyName === 'height'){
+          panel.style.height = 'auto';
+          panel.removeEventListener('transitionend', onEnd);
+        }
+      });
+    }
+
+    function collapse(btn, panel){
+      btn.setAttribute('aria-expanded', 'false');
+
+      const h = panel.scrollHeight + 'px';
+      panel.style.height = h;
+      requestAnimationFrame(() => {
+        panel.classList.remove('r-open');
+        panel.style.height = '0px';
+      });
+
+      panel.addEventListener('transitionend', function onEnd(e){
+        if (e.propertyName === 'height'){
+          panel.hidden = true;
+          panel.removeEventListener('transitionend', onEnd);
+        }
+      });
+    }
+  })();
+</script>
